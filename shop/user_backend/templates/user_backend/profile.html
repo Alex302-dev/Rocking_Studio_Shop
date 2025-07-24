@@ -1,7 +1,70 @@
 {% extends "shop/base.html" %}
-{% block title %} Profile {% endblock %}
+{% load i18n user_extras widget_tweaks%}
+
 {% block content %}
+<section class="py-12 px-4 bg-white dark:bg-black text-black dark:text-white">
+  <div class="max-w-4xl mx-auto grid md:grid-cols-3 gap-6">
 
-<p>Profile</p>
+    <!-- Profile Info -->
+    <div class="bg-zinc-100 dark:bg-zinc-900 p-6 rounded shadow">
+      <h2 class="text-xl font-bold mb-4 text-yellow-400">{% trans "Your Profile" %}</h2>
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="save_profile" value="1">
+        {% for field in fields %}
+        <div class="mb-4">
+          <label class="block text-sm mb-1 capitalize" for="{{ field }}">{{ field|capfirst }}</label>
+          <input type="text" name="{{ field }}" id="{{ field }}" value="{{ user|get_attr:field  }}" class="w-full px-3 py-2 rounded bg-white dark:bg-zinc-800 text-black dark:text-white border border-zinc-300 dark:border-zinc-600">
+        </div>
+        {% endfor %}
+        <div class="mb-4">
+          <label class="block text-sm mb-1">{% trans "Preferred Channel" %}</label>
+          <select name="preferred_channel" class="w-full px-3 py-2 rounded bg-white dark:bg-zinc-800 text-black dark:text-white border border-zinc-300 dark:border-zinc-600">
+            <option value="email" {% if user.preferred_channel == 'email' %}selected{% endif %}>Email</option>
+            <option value="mail" {% if user.preferred_channel == 'mail' %}selected{% endif %}>Mail</option>
+          </select>
+        </div>
+        <button class="bg-purple-400 text-black px-4 py-2 rounded hover:bg-purple-300" type="submit">Save</button>
+      </form>
+    </div>
 
+    <!-- Password Change -->
+    <div class="bg-zinc-100 dark:bg-zinc-900 p-6 rounded shadow">
+      <h2 class="text-xl font-bold mb-4 text-yellow-400">{% trans "Change Password" %}</h2>
+      <form method="post">
+        {% csrf_token %}
+        {{ password_form.management_form }}
+        <input type="hidden" name="change_password" value="1" class="bg-black">
+        {% for field in password_form %}
+  <div class="mb-4">
+    <label class="block text-sm mb-1" for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {{ field|add_class:"w-full px-3 py-2 rounded bg-white text-black dark:bg-black dark:text-white border border-zinc-300 dark:border-zinc-600" }}
+    {% if field.errors %}
+      <p class="text-red-500 text-sm">{{ field.errors }}</p>
+    {% endif %}
+  </div>
+{% endfor %}
+        <button class="bg-purple-400 text-black px-4 py-2 rounded hover:bg-purple-300" type="submit">Change Password</button>
+      </form>
+    </div>
+
+    <!-- Orders -->
+    <div class="bg-zinc-100 dark:bg-zinc-900 p-6 rounded shadow">
+      <h2 class="text-xl font-bold mb-4 text-yellow-400">{% trans "Orders" %}</h2>
+      {% if orders %}
+        <ul class="space-y-2 text-sm">
+          {% for order in orders %}
+            <li class="border border-zinc-300 dark:border-zinc-700 rounded p-2">
+              #{{ order.id }} – {{ order.created_at|date:"SHORT_DATE_FORMAT" }}<br>
+              {{ order.total_price }} {{ order.currency|default:"EUR" }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-gray-500">{% trans "No orders found." %}</p>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
 {% endblock %}
