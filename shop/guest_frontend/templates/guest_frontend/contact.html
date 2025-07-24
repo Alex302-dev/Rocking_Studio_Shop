@@ -1,0 +1,53 @@
+{% extends "shop/base.html" %}
+{% block title %}Contact{% endblock %}
+{% block content %}
+<section class ="py-12 px-4 max-w-6xl mx-auto">
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-purple-600 dark:text-purple-400">{{ contact.title}}</h1>
+        <p class = "text-gray-600 dark:text-gray-300 mt-2"> {{contact.subtitle }}</p>
+    </div>
+    <div class="grid md:grid-cols-2 gap-8">
+        <div class="space-y-4">
+            <div class="flex items-start gap-4">
+                <i class="{{contact.phone_icon}} text-2xl text-purple-500"></i>
+                <div>
+                    <h3 class="font-semibold">Phone</h3>
+                    <p>{{ contact.phone }}</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-4">
+                <i class="{{contact.address_icon}} text-2xl text-purple-500"></i>
+                <div>
+                    <h3 class="font-semibold">Address</h3>
+                    <p>{{ contact.address }}</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-4">
+                <i class="{{contact.email_icon}} text-2xl text-purple-500"></i>
+                <div>
+                    <h3 class="font-semibold">Email</h3>
+                    <p>{{ contact.email }}</p>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="aspect-video shadow rounded overflow-hidden">
+                {{ contact.map_embed_code | safe }}
+            </div>
+        </div>
+    </div>
+    <div class="mt-8">
+    {% if success %}
+        <p class ="text-green-800 font-semibold mb-4">Your message has been successfully sent.</p>
+    {% endif %}
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Full Name" required class="w-full p-3 border rounded bg-white dark: bg-zinc-800 dark:border-zinc-600">
+            <input type="text" name="email" placeholder="Email" required class="w-full p-3 border rounded bg-white dark: bg-zinc-800 dark:border-zinc-600">
+            <textarea name="message" placeholder="Message" required class="w-full p-3 border rounded bg-white dark: bg-zinc-800 dark:border-zinc-600"></textarea>
+            <button type="submit" class="w-full bg-purple-400 text-black font-semibold py-2 rounded hover:bg-purple-500">Send Message</button>
+        </form>
+    </div>
+</section>
+
+{% endblock %}

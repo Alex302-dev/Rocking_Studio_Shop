@@ -1,0 +1,15 @@
+{% extends "shop/base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto mt-10 bg-zinc-100 dark:bg-zinc-900 p-6 rounded-lg">
+  <h2 class="text-xl font-semibold mb-4">Register</h2>
+  <form method="post">
+    {% csrf_token %}
+    <input type="text" name="username" placeholder="Username" class="w-full p-2 mb-4 rounded bg-white text-black dark:bg-zinc-800 dark:text-white">
+    <input type="email" name="email" placeholder="Email" class="w-full p-2 mb-4 rounded bg-white text-black dark:bg-zinc-800 dark:text-white">
+    <input type="password" name="password" placeholder="Password" class="w-full p-2 mb-4 rounded bg-white text-black dark:bg-zinc-800 dark:text-white">
+    <input type="password" name="password2" placeholder="Confirm Password" class="w-full p-2 mb-4 rounded bg-white text-black dark:bg-zinc-800 dark:text-white">
+    <button type="submit" class="w-full bg-purple-400 text-black font-semibold py-2 rounded hover:bg-purple-500">Register</button>
+  </form>
+</div>
+{% endblock %}
