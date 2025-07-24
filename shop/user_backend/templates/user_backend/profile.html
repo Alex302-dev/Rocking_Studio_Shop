@@ -7,7 +7,7 @@
 
     <!-- Profile Info -->
     <div class="bg-zinc-100 dark:bg-zinc-900 p-6 rounded shadow">
-      <h2 class="text-xl font-bold mb-4 text-yellow-400">{% trans "Your Profile" %}</h2>
+      <h2 class="text-xl font-bold mb-4 text-purple-400">{% trans "Your Profile" %}</h2>
       <form method="post">
         {% csrf_token %}
         <input type="hidden" name="save_profile" value="1">
@@ -30,7 +30,7 @@
 
     <!-- Password Change -->
     <div class="bg-zinc-100 dark:bg-zinc-900 p-6 rounded shadow">
-      <h2 class="text-xl font-bold mb-4 text-yellow-400">{% trans "Change Password" %}</h2>
+      <h2 class="text-xl font-bold mb-4 text-purple-400">{% trans "Change Password" %}</h2>
       <form method="post">
         {% csrf_token %}
         {{ password_form.management_form }}
@@ -50,7 +50,7 @@
 
     <!-- Orders -->
     <div class="bg-zinc-100 dark:bg-zinc-900 p-6 rounded shadow">
-      <h2 class="text-xl font-bold mb-4 text-yellow-400">{% trans "Orders" %}</h2>
+      <h2 class="text-xl font-bold mb-4 text-purple-400">{% trans "Orders" %}</h2>
       {% if orders %}
         <ul class="space-y-2 text-sm">
           {% for order in orders %}
