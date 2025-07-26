@@ -24,13 +24,13 @@
 </head>
 <body class="bg-black text-white transition-colors duration-300 min-h-screen flex flex-col" id="theme-root">
     <nav class="sticky top-0 z-50 bg-zinc-100 dark:bg-zinc-900 px-6 py-3 flex items-center justify-between text-black dark:text-white shadow">
-        <div class="flex items-center gap-2 text-purple-400 font-bold text-xl">
-            <span>Store</span>
+        <div class="flex items-center gap-2 text-purple-400 font-bold text-3xl">
+            <span>Rocking Studio Shop</span>
         </div>
 
         <!-- Nav Links -->
-        <ul class="hidden md:flex space-x-6 text-sm text-left">
-            <li><a href="#" class="hover:text-purple-400">Home</a></li>
+        <ul class="items-center justify-center hidden md:flex space-x-6 text-xl text-left">
+            <li><a href="/" class="hover:text-purple-400">Home</a></li>
             <li x-data="{ open: false }" class="relative">
                 <button @click="open = !open" class="hover:text-purple-400 flex items-center gap-1 focus:outline-none">
                     Products <i class="ph ph-caret-down"></i>
@@ -39,20 +39,24 @@
                     class="absolute bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white mt-2 py-2 rounded shadow-lg min-w-[150px] z-50">
                     {% for value, label in categories %}
                         <li>
-                            <a href="{% url 'product_by_category' value %}" class="block px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-700">
+                            <a href="{% url 'guest_frontend:product_by_category' value %}" class="block px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-700">
                                 {{ label }}
                             </a>
                         </li>
                     {% endfor %}
                 </ul>
             </li>
-            <li><a href="{% url 'contact' %}" class="hover:text-purple-400">Contact</a></li>
+            <li><a href="{% url 'guest_frontend:contact' %}" class="hover:text-purple-400">Contact</a></li>
         </ul>
 
         <!-- Right Section -->
         <div class="flex items-center gap-3">
             {% if user.is_authenticated %}
-                <a href="{% url 'user_backend:profile' %}" class="px-4 py-2 bg-purple-400 text-black rounded-xl text-sm font-semibold">Profile
+                <a href="{% url 'guest_frontend:cart' 1 %}" class="relative text-2xl text-white-600 hover:text-grey-500">
+                  <i class="ph ph-shopping-cart"></i>
+                  <span class="sr-only">Cart</span>
+                </a>
+                <a href="{% url 'user_backend:profile' %}" class="text-purple-400 rounded-xl text-sm font-semibold">Profile
                 </a>
                 {% if user.avatar_url %}
                         <img src="{{ user.avatar_url }}" alt="Avatar" class="rounded-full w-8 h-8 object-cover">
@@ -75,6 +79,13 @@
     </main>
    <!-- Footer -->
     <footer class="bg-zinc-100 dark:bg-zinc-900 text-black dark:text-white pt-12 px-6">
+      <div class="max-w-7xl mx-auto">
+
+        {% if user.is_authenticated and user_city %}
+          <div class="flex justify-end mb-4">
+            <div id="weather-widget" class="text-right"></div>
+          </div>
+        {% endif %}
       <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-6 gap-6 text-sm">
         <!-- Socials & Settings -->
         <div class="space-y-6">
@@ -93,22 +104,11 @@
         <div class="space-y-2">
           <p class="font-bold">Column1</p>
           <p>Link</p>
-          <p>Link</p>
-          <p>Link</p>
-          <p>Link</p>
-          <p>Link</p>
-          <p>Link</p>
-          <p>Link</p>
         </div>
 
         <!-- Links Column 2 -->
         <div class="space-y-2">
           <p class="font-bold">Column 2</p>
-          <p>Link</p>
-          <p>Link</p>
-          <p>Link</p>
-          <p>Link</p>
-          <p>Link</p>
           <p>Link</p>
         </div>
 
@@ -116,24 +116,47 @@
         <div class="space-y-2">
           <p class="font-bold">Column 3</p>
           <p>Link</p>
-          <p>Link</p>
-          <p>Link</p>
-          <p>Link</p>
-          <p>Link</p>
-          <p>Link</p>
         </div>
 
         <!-- Links Column 4 -->
         <div class="space-y-2">
           <p class="font-bold">Column 4</p>
           <p>Link</p>
-          <p>Link</p>
-          <p>Link</p>
-          <p>Link</p>
-          <p>Link/p>
         </div>
       </div>
-        <p class="text-sm text-zinc-400">© 2025 Store. All rights reserved.</p>
+        <p class="text-sm text-zinc-400">© 2025 Rocking Studio Shop. All rights reserved.</p>
     </footer>
+{% if user.is_authenticated and user_city %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const city = "{{ user_city|urlencode }}";
+
+  fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1`)
+    .then(response => response.json())
+    .then(data => {
+      if (!data.results || data.results.length === 0) {
+        throw new Error("Location not found");
+      }
+
+      const { latitude, longitude } = data.results[0];
+      return fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
+    })
+    .then(response => response.json())
+    .then(data => {
+      const weather = data.current_weather;
+      const widget = document.getElementById("weather-widget");
+      widget.innerHTML = `
+        <div class="text-sm text-gray-700 dark:text-gray-300">
+          <strong>Weather in {{ user_city }}:</strong><br>
+          ${weather.temperature}°C, ${weather.windspeed} km/h wind
+        </div>
+      `;
+    })
+    .catch(err => {
+      console.warn("Weather fetch failed:", err);
+    });
+});
+</script>
+{% endif %}
 </body>
 </html>

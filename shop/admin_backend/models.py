@@ -1,5 +1,8 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.utils import timezone
+from user_backend.models import CustomUser
+
 
 def validate_image_extension(value):
     valid_extensions = ['jpg', 'jpeg', 'png']
@@ -40,3 +43,34 @@ class ProductImageURL(models.Model):
 
     def __str__(self):
         return f"{self.product.name} - URL Image"
+
+class Order(models.Model):
+    class Status(models.TextChoices):
+        PAID = 'paid',
+        PENDING = 'pending',
+        SHIPPED = 'shipped',
+        DELIVERED = 'delivered',
+
+    user = models.ForeignKey(CustomUser, related_name="orders", on_delete=models.CASCADE,)
+    total_cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    delivery_address = models.TextField(max_length=255)
+    user_address = models.TextField(max_length=255)
+    submitted_at = models.DateTimeField(default=timezone.now)
+    client_full_name = models.CharField(max_length=255)
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
+    product_title = models.CharField(max_length=255)
+    quantity = models.PositiveIntegerField()
+    price_per_item = models.DecimalField(max_digits=10, decimal_places=2)
+
+    card_number = models.CharField(max_length=16, blank=True, null=True)
+    card_expiry = models.CharField(max_length=5, blank=True, null=True)
+    card_cvv = models.CharField(max_length=3, blank=True, null=True)
+    cardholder_name = models.CharField(max_length=255, blank=True, null=True)
+    buy_session_hash = models.CharField(max_length=64, blank=True, null=True)
+
+    def __str__(self):
+        return f"Comandă #{self.id} de la {self.client_full_name}"
+
+    def save(self, *args, **kwargs):
+        self.total_cost = self.quantity * self.price_per_item
+        super().save(*args, **kwargs)

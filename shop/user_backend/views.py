@@ -78,3 +78,4 @@ def profile_view(request):
         'password_form': password_form,
         'fields': fields
     })
+
