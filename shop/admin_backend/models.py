@@ -55,6 +55,7 @@ class Order(models.Model):
     total_cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     delivery_address = models.TextField(max_length=255)
     user_address = models.TextField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     submitted_at = models.DateTimeField(default=timezone.now)
     client_full_name = models.CharField(max_length=255)
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)

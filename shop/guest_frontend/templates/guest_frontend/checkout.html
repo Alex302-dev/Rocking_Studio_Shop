@@ -3,7 +3,7 @@
 
 {% block content %}
 <section class="max-w-xl mx-auto py-16 px-4">
-  <h1 class="text-3xl font-bold text-center text-purple-600 mb-8">Checkout</h1>
+  <h1 class="text-3xl font-bold text-center text-emerald-600 mb-8">Checkout</h1>
 
   {% if messages %}
     <ul class="mb-4 space-y-2">
@@ -17,7 +17,7 @@
     {% csrf_token %}
     <div>
       <label for="cardholder_name" class="block font-semibold mb-1">Cardholder Name</label>
-      <input type="text" name="cardholder_name" placeholder="First Last" pattern="^\w+\s+\w+.*$" required class="w-full px-4 py-2 border rounded bg-white dark:bg-zinc-800">
+      <input type="text" name="cardholder_name" placeholder="First Name and Last Name" pattern="^\w+\s+\w+.*$" required class="w-full px-4 py-2 border rounded bg-white dark:bg-zinc-800">
     </div>
     <div>
       <label for="card_number" class="block font-semibold mb-1">Card Number</label>
@@ -53,9 +53,9 @@
        oninput="this.value = this.value.replace(/[^0-9]/g, '')">
       </div>
     </div>
-    <p class="text-xl font-bold text-purple-600 mt-4">Total: ${{ total }}</p>
+    <p class="text-xl font-bold text-emerald-600 mt-4">Total: ${{ total }}</p>
     <div>
-      <button type="submit" class="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg font-semibold">
+      <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-lg font-semibold">
         Pay Now
       </button>
     </div>

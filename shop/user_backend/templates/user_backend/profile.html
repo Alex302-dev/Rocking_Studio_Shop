@@ -7,7 +7,7 @@
 
     <!-- Profile Info -->
     <div class="bg-zinc-100 dark:bg-zinc-900 p-6 rounded shadow">
-      <h2 class="text-xl font-bold mb-4 text-purple-400">{% trans "Your Profile" %}</h2>
+      <h2 class="text-xl font-bold mb-4 text-emerald-400">{% trans "Your Profile" %}</h2>
       <form method="post">
         {% csrf_token %}
         <input type="hidden" name="save_profile" value="1">
@@ -24,13 +24,13 @@
             <option value="mail" {% if user.preferred_channel == 'mail' %}selected{% endif %}>Mail</option>
           </select>
         </div>
-        <button class="bg-purple-400 text-black px-4 py-2 rounded hover:bg-purple-300" type="submit">Save</button>
+        <button class="bg-emerald-400 text-black px-4 py-2 rounded hover:bg-emerald-300" type="submit">Save</button>
       </form>
     </div>
 
     <!-- Password Change -->
     <div class="bg-zinc-100 dark:bg-zinc-900 p-6 rounded shadow">
-      <h2 class="text-xl font-bold mb-4 text-purple-400">{% trans "Change Password" %}</h2>
+      <h2 class="text-xl font-bold mb-4 text-emerald-400">{% trans "Change Password" %}</h2>
       <form method="post">
         {% csrf_token %}
         {{ password_form.management_form }}
@@ -44,18 +44,18 @@
     {% endif %}
   </div>
 {% endfor %}
-        <button class="bg-purple-400 text-black px-4 py-2 rounded hover:bg-purple-300" type="submit">Change Password</button>
+        <button class="bg-emerald-400 text-black px-4 py-2 rounded hover:bg-emerald-300" type="submit">Change Password</button>
       </form>
     </div>
 
     <!-- Orders -->
     <div class="bg-zinc-100 dark:bg-zinc-900 p-6 rounded shadow">
-      <h2 class="text-xl font-bold mb-4 text-purple-400">{% trans "Orders" %}</h2>
+      <h2 class="text-xl font-bold mb-4 text-emerald-400">{% trans "Orders" %}</h2>
       {% if orders %}
         <ul class="space-y-2 text-sm">
           {% for order in orders %}
             <li class="border border-zinc-300 dark:border-zinc-700 rounded p-2">
-              #{{ order.id }} – {{ order.created_at|date:"SHORT_DATE_FORMAT" }}<br>
+              #{{ order.id }} – {{ order.submitted_at|date:"SHORT_DATE_FORMAT" }}<br>
               {{ order.total_price }} {{ order.currency|default:"EUR" }}
             </li>
           {% endfor %}

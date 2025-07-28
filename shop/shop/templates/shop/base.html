@@ -24,15 +24,15 @@
 </head>
 <body class="bg-black text-white transition-colors duration-300 min-h-screen flex flex-col" id="theme-root">
     <nav class="sticky top-0 z-50 bg-zinc-100 dark:bg-zinc-900 px-6 py-3 flex items-center justify-between text-black dark:text-white shadow">
-        <div class="flex items-center gap-2 text-purple-400 font-bold text-3xl">
+        <div class="flex items-center gap-2 text-emerald-400 font-bold text-3xl">
             <span>Rocking Studio Shop</span>
         </div>
 
         <!-- Nav Links -->
         <ul class="items-center justify-center hidden md:flex space-x-6 text-xl text-left">
-            <li><a href="/" class="hover:text-purple-400">Home</a></li>
+            <li><a href="/" class="hover:text-emerald-400">Home</a></li>
             <li x-data="{ open: false }" class="relative">
-                <button @click="open = !open" class="hover:text-purple-400 flex items-center gap-1 focus:outline-none">
+                <button @click="open = !open" class="hover:text-emerald-400 flex items-center gap-1 focus:outline-none">
                     Products <i class="ph ph-caret-down"></i>
                 </button>
                 <ul x-show="open" @click.away="open = false" x-transition
@@ -46,17 +46,17 @@
                     {% endfor %}
                 </ul>
             </li>
-            <li><a href="{% url 'guest_frontend:contact' %}" class="hover:text-purple-400">Contact</a></li>
+            <li><a href="{% url 'guest_frontend:contact' %}" class="hover:text-emerald-400">Contact</a></li>
         </ul>
 
         <!-- Right Section -->
         <div class="flex items-center gap-3">
             {% if user.is_authenticated %}
-                <a href="{% url 'guest_frontend:cart' 1 %}" class="relative text-2xl text-white-600 hover:text-grey-500">
+                <a href="{% url 'guest_frontend:cart' 1%}" class="relative text-2xl text-white-600 hover:text-grey-500">
                   <i class="ph ph-shopping-cart"></i>
                   <span class="sr-only">Cart</span>
                 </a>
-                <a href="{% url 'user_backend:profile' %}" class="text-purple-400 rounded-xl text-sm font-semibold">Profile
+                <a href="{% url 'user_backend:profile' %}" class="text-emerald-400 rounded-xl text-sm font-semibold">Profile
                 </a>
                 {% if user.avatar_url %}
                         <img src="{{ user.avatar_url }}" alt="Avatar" class="rounded-full w-8 h-8 object-cover">
@@ -66,7 +66,7 @@
                 <a href="" class="px-4 py-2 bg-zinc-800 text-white rounded-xl text-sm">Log Out</a>
             {% else %}
                 <a href="{% url 'user_backend:login' %}" class="px-4 py-2 bg-zinc-500 text-white rounded-xl text-sm">Log In</a>
-                <a href="{% url 'user_backend:register' %}" class="px-4 py-2 bg-purple-400 text-black rounded-xl text-sm font-semibold">Sign Up</a>
+                <a href="{% url 'user_backend:register' %}" class="px-4 py-2 bg-emerald-400 text-black rounded-xl text-sm font-semibold">Sign Up</a>
             {% endif %}
         </div>
     </nav>
