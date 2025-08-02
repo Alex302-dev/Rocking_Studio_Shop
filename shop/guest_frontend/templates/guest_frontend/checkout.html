@@ -2,7 +2,7 @@
 {% block title %}Checkout{% endblock %}
 
 {% block content %}
-<section class="max-w-xl mx-auto py-16 px-4">
+<section class="max-w-4xl mx-auto py-16 px-4">
   <h1 class="text-3xl font-bold text-center text-emerald-600 mb-8">Checkout</h1>
 
   {% if messages %}
@@ -13,25 +13,67 @@
     </ul>
   {% endif %}
 
+  <!-- Cart Items -->
+  {% for item in cart.items.all %}
+    <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-6 mb-4">
+      {% if item.product.productimage_set.first %}
+        <img src="{{ item.product.productimage_set.first.image.url }}"
+             alt="{{ item.product.name }}"
+             class="w-24 h-24 object-cover rounded-lg border border-gray-300 dark:border-zinc-700">
+      {% else %}
+        <div class="w-24 h-24 bg-gray-200 dark:bg-zinc-700 flex items-center justify-center text-gray-500 rounded-lg border">
+          No Image
+        </div>
+      {% endif %}
+      <div class="flex-1">
+        <h2 class="text-lg font-semibold">{{ item.product.name }}</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400">{{ item.product.texture }}</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Quantity: {{ item.quantity }}</p>
+      </div>
+      <div class="text-right">
+        <p class="text-lg font-bold text-emerald-600 dark:text-emerald-400">${{ item.price }}</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Total: ${{ item.get_total_price }}</p>
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-center text-gray-500">Your cart is empty.</p>
+  {% endfor %}
+  <!-- Total -->
+  <div class="flex justify-end border-t border-gray-200 dark:border-zinc-700 pt-4 mb-6">
+    <div class="text-right">
+      <p class="text-sm text-gray-600 dark:text-gray-400">Subtotal:</p>
+      <p class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">${{ cart.get_total_price }}</p>
+    </div>
+  </div>
+
+  <!-- Checkout Form -->
   <form method="post" class="space-y-6 bg-white dark:bg-zinc-900 p-6 rounded-lg shadow-md">
     {% csrf_token %}
+    <div>
+      <label for="delivery_address" class="block font-semibold mb-1">Delivery Address</label>
+      <input type="text" name="delivery_address" id="delivery_address" class="w-full px-4 py-2 border rounded bg-white dark:bg-zinc-800" required>
+    </div>
+    <div>
+      <label for="user_address" class="block font-semibold mb-1">User Address</label>
+      <input type="text" name="user_address" id="user_address" class="w-full px-4 py-2 border rounded bg-white dark:bg-zinc-800" required>
+    </div>
     <div>
       <label for="cardholder_name" class="block font-semibold mb-1">Cardholder Name</label>
       <input type="text" name="cardholder_name" placeholder="First Name and Last Name" pattern="^\w+\s+\w+.*$" required class="w-full px-4 py-2 border rounded bg-white dark:bg-zinc-800">
     </div>
     <div>
       <label for="card_number" class="block font-semibold mb-1">Card Number</label>
-<input type="text"
-       name="card_number"
-       placeholder="1234567812345678"
-       inputmode="numeric"
-       pattern="\d{16}"
-       maxlength="16"
-       title="Card number must be exactly 16 digits"
-       required
-       class="w-full px-4 py-2 border rounded bg-white dark:bg-zinc-800"
-       autocomplete="cc-number"
-       oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+      <input type="text"
+             name="card_number"
+             placeholder="1234567812345678"
+             inputmode="numeric"
+             pattern="\d{16}"
+             maxlength="16"
+             title="Card number must be exactly 16 digits"
+             required
+             class="w-full px-4 py-2 border rounded bg-white dark:bg-zinc-800"
+             autocomplete="cc-number"
+             oninput="this.value = this.value.replace(/[^0-9]/g, '')">
     </div>
     <div class="grid grid-cols-2 gap-4">
       <div>
@@ -40,20 +82,19 @@
       </div>
       <div>
         <label for="card_cvv" class="block font-semibold mb-1">CVV</label>
-<input type="text"
-       name="card_cvv"
-       placeholder="123"
-       inputmode="numeric"
-       pattern="\d{3}"
-       maxlength="3"
-       title="CVV must be exactly 3 digits"
-       required
-       class="w-full px-4 py-2 border rounded bg-white dark:bg-zinc-800"
-       autocomplete="cc-csc"
-       oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        <input type="text"
+               name="card_cvv"
+               placeholder="123"
+               inputmode="numeric"
+               pattern="\d{3}"
+               maxlength="3"
+               title="CVV must be exactly 3 digits"
+               required
+               class="w-full px-4 py-2 border rounded bg-white dark:bg-zinc-800"
+               autocomplete="cc-csc"
+               oninput="this.value = this.value.replace(/[^0-9]/g, '')">
       </div>
     </div>
-    <p class="text-xl font-bold text-emerald-600 mt-4">Total: ${{ total }}</p>
     <div>
       <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-lg font-semibold">
         Pay Now

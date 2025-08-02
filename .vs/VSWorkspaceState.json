@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\shop",
+    "\\shop\\admin_backend",
+    "\\shop\\guest_frontend",
+    "\\shop\\guest_frontend\\templates",
+    "\\shop\\guest_frontend\\templates\\guest_frontend"
+  ],
+  "SelectedNode": "\\shop\\guest_frontend\\templates\\guest_frontend\\checkout.html",
+  "PreviewInSolutionExplorer": false
+}

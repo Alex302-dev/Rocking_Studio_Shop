@@ -1,7 +1,7 @@
 from urllib.request import Request
 
 from django.shortcuts import render, redirect, get_object_or_404
-from admin_backend.models import Product, ProductImage, Order
+from admin_backend.models import Product, ProductImage, Order, Cart, CartItem, OrderItem
 from django.utils.inspect import method_has_no_args
 from django.utils.crypto import get_random_string
 from django.http import HttpResponse
@@ -79,87 +79,45 @@ def product_detail_view(request, pk):
 
 def add_to_cart(request, pk):
     product = get_object_or_404(Product, pk=pk)
+    cart, created = Cart.objects.get_or_create(user=request.user, checked_out=False)
+    item, created = CartItem.objects.get_or_create(cart=cart, product=product, defaults={'price': product.price})
+    if not created:
+        item.quantity += 1
+        item.save()
+    return redirect('guest_frontend:cart')
 
+def cart_view(request):
+    cart, created = Cart.objects.get_or_create(user=request.user, checked_out=False)
+    return render(request, 'guest_frontend/cart.html', {'cart': cart})
+
+def checkout_view(request, cart_id):
+    cart = get_object_or_404(Cart, pk=cart_id, user=request.user, checked_out=False)
     if request.method == 'POST':
-        cart = request.session.get('cart', {})
-        cart[str(pk)] = cart.get(str(pk), 0) + 1  # Increment quantity
-        request.session['cart'] = cart
-        request.session.modified = True
-        return redirect('guest_frontend:cart', product_id=pk)
-
-def cart_page(request, product_id):
-    product = get_object_or_404(Product, pk=product_id)
-
-    # Create or retrieve an order object for the current session/user
-    order = Order.objects.filter(user=request.user, status=Order.Status.PENDING).first()
-
-    if not order:
         order = Order.objects.create(
             user=request.user,
-            delivery_address="",
-            user_address="",
-            client_full_name = request.user.full_name,
-            product_title=product.name,
-            quantity=1,
-            price_per_item=product.price
+            delivery_address=request.POST.get('delivery_address', ''),
+            user_address=request.POST.get('user_address', ''),
+            client_full_name=request.user.full_name,
+            status=Order.Status.PAID,
         )
-
-    return render(request, 'guest_frontend/cart.html', {
-        'product': product,
-        'order': order,
-    })
-
-def checkout_view(request, order_id):
-  order = get_object_or_404(Order, pk=order_id)
-  if request.method == 'POST':
-    card_number = request.POST.get('card_number', '').strip()
-    card_expiry = request.POST.get('card_expiry', '').strip()
-    card_cvv = request.POST.get('card_cvv', '').strip()
-    cardholder_name = request.POST.get('cardholder_name', '').strip()
-    errors = []
-    if not card_number.isdigit() or len(card_number) != 16:
-      errors.append("Card number must be exactly 16 digits.")
-    if not card_cvv.isdigit() or len(card_cvv) != 3:
-      errors.append("CVV must be exactly 3 digits.")
-    if not cardholder_name or len(cardholder_name.split()) < 2:
-      errors.append("Cardholder name must contain at least two words.")
-    if not card_expiry or len(card_expiry) != 5 or card_expiry[2] != '/':
-      errors.append("Expiration date must be in MM/YY format.")
-    else:
-      try:
-        month, year = map(int, card_expiry.split('/'))
-        if not (1 <= month <= 12):
-          raise ValueError
-        expiry_date = datetime.strptime(f"{month}/20{year}", "%m/%Y")
-        if expiry_date < datetime.now().replace(day=1):
-          errors.append("Expiration date must be in the future.")
-      except ValueError:
-        errors.append("Invalid expiration date format.")
-    if errors:
-      for error in errors:
-        messages.error(request, error)
-      return render(request, 'guest_frontend/checkout.html', {
-        'order': order,
-        'total': order.total_cost
-      })
-    session_data = f"{card_number}{card_expiry}{cardholder_name}{get_random_string(8)}"
-    buy_session_hash = hashlib.sha256(session_data.encode()).hexdigest()
-    order.card_number = card_number
-    order.card_expiry = card_expiry
-    order.card_cvv = card_cvv
-    order.cardholder_name = cardholder_name
-    order.buy_session_hash = buy_session_hash
-    order.status = Order.Status.PAID
-    order.save()
-    if 'cart' in request.session:
-      del request.session['cart']
-      request.session.modified = True
-    return redirect('guest_frontend:checkout_success')
-  return render(request, 'guest_frontend/checkout.html', {
-    'order': order,
-    'total': order.total_cost
-  })
+        for item in cart.items.all():
+            OrderItem.objects.create(
+                order=order,
+                product=item.product,
+                quantity=item.quantity,
+                price=item.price
+            )
+        cart.checked_out = True
+        cart.save()
+        cart.items.all().delete()
+        return redirect('guest_frontend:checkout_success')
+    return render(request, 'guest_frontend/checkout.html', {'cart': cart})
 
 def checkout_success_view(request):
     return render(request, 'guest_frontend/success.html')
+
+def remove_from_cart(request, item_id):
+    item = get_object_or_404(CartItem, id=item_id, cart__user=request.user, cart__checked_out=False)
+    item.delete()
+    return redirect('guest_frontend:cart')
 

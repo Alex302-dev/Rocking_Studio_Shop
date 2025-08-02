@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, ProductImage, ProductImageURL, Order
+from .models import Product, ProductImage, ProductImageURL, Order, OrderItem
 from django.utils.translation import gettext_lazy as _
 
 class ProductImageInline(admin.TabularInline):
@@ -30,25 +30,18 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'client_full_name',
-        'product_title',
-        'quantity',
-        'price_per_item',
         'total_cost',
         'status',
         'submitted_at',
     )
     list_filter = ('status', 'submitted_at')
-    search_fields = ('client_full_name', 'product_title', 'user__email')
+    search_fields = ('client_full_name', 'user__email')
     readonly_fields = ('submitted_at', 'total_cost', 'buy_session_hash')
-
     fieldsets = (
         (_('Order Details'), {
             'fields': (
                 'user',
                 'client_full_name',
-                'product_title',
-                'quantity',
-                'price_per_item',
                 'total_cost',
                 'status',
             )

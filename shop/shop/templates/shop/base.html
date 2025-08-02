@@ -29,7 +29,7 @@
         </div>
 
         <!-- Nav Links -->
-        <ul class="items-center justify-center hidden md:flex space-x-6 text-xl text-left">
+        <ul class=" items-center justify-center hidden md:flex space-x-6 text-xl text-left">
             <li><a href="/" class="hover:text-emerald-400">Home</a></li>
             <li x-data="{ open: false }" class="relative">
                 <button @click="open = !open" class="hover:text-emerald-400 flex items-center gap-1 focus:outline-none">
@@ -52,7 +52,7 @@
         <!-- Right Section -->
         <div class="flex items-center gap-3">
             {% if user.is_authenticated %}
-                <a href="{% url 'guest_frontend:cart' 1%}" class="relative text-2xl text-white-600 hover:text-grey-500">
+                <a href="{% url 'guest_frontend:cart' %}" class="relative text-2xl text-white-600 hover:text-grey-500">
                   <i class="ph ph-shopping-cart"></i>
                   <span class="sr-only">Cart</span>
                 </a>
@@ -147,8 +147,8 @@ document.addEventListener('DOMContentLoaded', function () {
       const widget = document.getElementById("weather-widget");
       widget.innerHTML = `
         <div class="text-sm text-gray-700 dark:text-gray-300">
-          <strong>Weather in {{ user_city }}:</strong><br>
-          ${weather.temperature}°C, ${weather.windspeed} km/h wind
+          <strong>🌤️ Weather in {{ user_city }}:</strong><br>
+          🌡️${weather.temperature}°C, 🍃${weather.windspeed} km/h wind
         </div>
       `;
     })

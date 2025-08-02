@@ -50,7 +50,7 @@
       <h3 class="font-semibold text-base mb-1 truncate">{{ product.name }}</h3>
       <p class="text-sm text-gray-500 dark:text-gray-400">{{ product.texture }}</p>
       <div class="flex justify-between items-center mt-2">
-        <span class="text-emerald-600 dark:text-emerald-400 font-bold text-sm">${{ product.price }}</span>
+        <span class="text-emerald-600 dark:text-emerald-400 font-bold text-sm">€{{ product.price }}</span>
         <a href="{% url 'guest_frontend:product_detail_view' product.id %}" class="text-xs bg-emerald-400 text-white px-3 py-1 rounded font-semibold hover:bg-emerald-500 transition">Details</a>
       </div>
     </div>
