@@ -78,9 +78,11 @@ def product_detail_view(request, pk):
     return render(request, 'guest_frontend/product_detail.html', {'product': product})
 
 def add_to_cart(request, pk):
+    if not request.user.is_authenticated:
+        return redirect('guest_frontend:login_required')
     product = get_object_or_404(Product, pk=pk)
     cart, created = Cart.objects.get_or_create(user=request.user, checked_out=False)
-    item, created = CartItem.objects.get_or_create(cart=cart, product=product, defaults={'price': product.price})
+    item, created = CartItem.objects.get_or_create(cart=cart, product=product, defaults={'price': product.price, 'quantity': 1})
     if not created:
         item.quantity += 1
         item.save()
@@ -120,4 +122,7 @@ def remove_from_cart(request, item_id):
     item = get_object_or_404(CartItem, id=item_id, cart__user=request.user, cart__checked_out=False)
     item.delete()
     return redirect('guest_frontend:cart')
+
+def login_required_view(request):
+    return render(request, 'guest_frontend/login_required.html')
 

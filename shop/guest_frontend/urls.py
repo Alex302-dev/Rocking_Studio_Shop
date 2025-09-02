@@ -6,7 +6,6 @@ app_name = 'guest_frontend'
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('index2/', views.index, name='index2'),
     path('products/<str:category>/', views.product_by_category, name='product_by_category'),
     path('contact/', contact_page, name='contact'),
     path('subscribe/', subscribe_view, name='subscribe'),
@@ -16,4 +15,5 @@ urlpatterns = [
     path('checkout/<int:cart_id>/', views.checkout_view, name='checkout'),
     path('checkout-success/', views.checkout_success_view, name='checkout_success'),
     path('remove-from-cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
+    path('login-required/', views.login_required_view, name='login_required'),
 ]

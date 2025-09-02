@@ -63,7 +63,7 @@
                     {% else %}
                         <i class="ph ph-user-circl"></i>
                     {% endif %}
-                <a href="" class="px-4 py-2 bg-zinc-800 text-white rounded-xl text-sm">Log Out</a>
+                <a href="{% url 'user_backend:logout' %}" class="px-4 py-2 bg-zinc-800 text-white rounded-xl text-sm">Log Out</a>
             {% else %}
                 <a href="{% url 'user_backend:login' %}" class="px-4 py-2 bg-zinc-500 text-white rounded-xl text-sm">Log In</a>
                 <a href="{% url 'user_backend:register' %}" class="px-4 py-2 bg-emerald-400 text-black rounded-xl text-sm font-semibold">Sign Up</a>
