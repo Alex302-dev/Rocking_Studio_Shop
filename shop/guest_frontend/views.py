@@ -41,6 +41,7 @@ def product_by_category(request, category):
 
 def contact_page(request):
     contact_info = ContactPage.objects.first()
+    categories = Product.CATEGORY_CHOICES
     success = False
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -51,7 +52,8 @@ def contact_page(request):
             success = True
     return render(request, 'guest_frontend/contact.html', {
         'contact': contact_info,
-        'success':success
+        'success': success,
+        'categories': categories,
     })
 
 def subscribe_view(request):

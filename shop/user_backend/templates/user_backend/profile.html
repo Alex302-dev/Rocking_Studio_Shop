@@ -5,7 +5,7 @@
 <section class="py-12 px-4 bg-white dark:bg-black text-black dark:text-white">
   <div class="max-w-4xl mx-auto grid md:grid-cols-3 gap-6">
 
-    <!-- Profile Info -->
+
     <div class="bg-zinc-100 dark:bg-zinc-900 p-6 rounded shadow">
       <h2 class="text-xl font-bold mb-4 text-emerald-400">{% trans "Your Profile" %}</h2>
       <form method="post">
@@ -21,14 +21,14 @@
           <label class="block text-sm mb-1">{% trans "Preferred Channel" %}</label>
           <select name="preferred_channel" class="w-full px-3 py-2 rounded bg-white dark:bg-zinc-800 text-black dark:text-white border border-zinc-300 dark:border-zinc-600">
             <option value="email" {% if user.preferred_channel == 'email' %}selected{% endif %}>Email</option>
-            <option value="mail" {% if user.preferred_channel == 'mail' %}selected{% endif %}>Mail</option>
+            <option value="phone" {% if user.preferred_channel == 'phone' %}selected{% endif %}>Phone</option>
           </select>
         </div>
         <button class="bg-emerald-400 text-black px-4 py-2 rounded hover:bg-emerald-300" type="submit">Save</button>
       </form>
     </div>
 
-    <!-- Password Change -->
+
     <div class="bg-zinc-100 dark:bg-zinc-900 p-6 rounded shadow">
       <h2 class="text-xl font-bold mb-4 text-emerald-400">{% trans "Change Password" %}</h2>
       <form method="post">
@@ -48,7 +48,6 @@
       </form>
     </div>
 
-    <!-- Orders -->
     <div class="bg-zinc-100 dark:bg-zinc-900 p-6 rounded shadow">
       <h2 class="text-xl font-bold mb-4 text-emerald-400">{% trans "Orders" %}</h2>
       {% if orders %}

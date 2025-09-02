@@ -60,3 +60,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+    def update_preferred_channel(self, request):
+        self.preferred_channel = request.POST.get('preferred_channel', self.preferred_channel)
+        self.save()

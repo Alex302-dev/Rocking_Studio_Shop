@@ -57,7 +57,7 @@ def profile_view(request):
             user.street = request.POST.get('street', '').strip()
             user.zip_code = request.POST.get('zip_code', '').strip()
             user.avatar_url = request.POST.get('avatar_url', '').strip()
-            user.preffered_channel = request.POST.get('preffered_channel', user.preffered_channel)
+            user.preferred_channel = request.POST.get('preferred_channel', user.preferred_channel)
             user.save()
             messages.success(request,'Profile updated successfully.')
             return redirect('user_backend:profile')
@@ -76,7 +76,7 @@ def profile_view(request):
 
     orders = getattr(user, 'orders', None)
     orders = orders.all().order_by('-created_at') if orders else []
-    fields = ['full_name', 'phone', 'city', 'country', 'street', 'zip_code', 'avatar_url', 'preffered_channel']
+    fields = ['full_name', 'phone', 'city', 'country', 'street', 'zip_code', 'avatar_url', 'preferred_channel']
 
     return render(request, 'user_backend/profile.html', {
         'user': user,
